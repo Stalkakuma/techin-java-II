@@ -2,42 +2,42 @@ package com.example.users.controllers;
 
 import com.example.users.dto.UserCreationDTO;
 import com.example.users.entities.User;
+import com.example.users.services.UserService;
 import com.example.users.utilities.UserConverter;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.atomic.AtomicLong;
 
 @RestController
-@RequestMapping("/api/users")
+@RequestMapping("/api/v2/users")
 public class UserController {
 
-    private final AtomicLong idCounter = new AtomicLong();
-    private final List<User> users = new ArrayList<>();
+    private final UserService userService;
+
+    @Autowired
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
     @GetMapping
     public List<User> getAllUsers(){
-        return users;
+        return userService.getAllUsers();
     }
 
     @PostMapping
     public User createUser(@RequestBody UserCreationDTO userCreationDTO){
-        long newId = idCounter.incrementAndGet();
-        User user = UserConverter.convertToEntity(userCreationDTO);
-        user.setId(newId);
-        users.add(user);
-        return user;
+        return userService.addUser(userCreationDTO);
     }
 
     @GetMapping("/{id}")
     public User getUserById(@PathVariable Long id){
-        return users.stream().filter(user -> user.getId() == id).findFirst().orElse(null);
+        return userService.getUser(id);
     }
 
     @DeleteMapping("/{id}")
     public void deleteUserById(@PathVariable Long id){
-        users.removeIf(user -> user.getId() == id);
+        userService.deleteUser(id);
     }
 
 }
