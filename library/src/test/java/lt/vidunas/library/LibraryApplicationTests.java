@@ -34,7 +34,7 @@ class LibraryApplicationTests {
 		book.setId(1L);
 		book.setTitle("Book 1");
 
-		//TODO Learn
+		//TODO Learn to mock
 //		when(bookService.findBook(1L)).thenReturn(book);
 
 		mockMvc.perform(get("/api/v1/books/1"))
@@ -50,6 +50,8 @@ class LibraryApplicationTests {
 		Book book2 = new Book();
 		book2.setId(2L);
 		book2.setTitle("Book 2");
+		//mokinti repozitoriją
+
 		bookRepository.save(book);
 		bookRepository.save(book2);
 
